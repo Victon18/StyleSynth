@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
   rewrites: async () => {
     return [
@@ -10,6 +11,9 @@ const nextConfig = {
             : '/api/',
       },
     ]
+  },
+ experimental: {
+    serverActions: true,
   },
 }
 

@@ -90,7 +90,7 @@ const HeroSection = () => {
           <div className="relative">
             <div className="relative rounded-2xl overflow-hidden shadow-fashion-hover">
               <img
-                src={Image}
+                src={Image.src}
                 alt="AI Fashion Design Studio"
                 className="w-full h-full object-cover"
               />
