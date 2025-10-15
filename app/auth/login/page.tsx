@@ -1,34 +1,20 @@
-    import { signIn, providerMap } from "@/auth";
+import { signIn, providerMap } from "@/auth";
 
 export default async function SignInPage() {
   return (
     <div className="flex overflow-hidden relative w-full h-full">
       <img
-        src="/login_pattern.svg"
+        src="/gen3.png"
         alt="Pattern Background"
         className="object-cover fixed top-0 left-0 w-screen h-screen bg-white -z-10"
       />
       <div
         aria-label="Slate cover background"
-        className="absolute left-0 top-0 z-10 flex h-[275%] w-[150%] translate-x-[-70%] translate-y-[-28%] rotate-[22deg] items-center bg-zinc-900 md:translate-y-[-15%] md:rotate-[11deg]"
+        className="fixed left-0 top-0 z-10 flex h-screen w-[100%] translate-x-[-70%]
+                bg-black/20 backdrop-blur-lg  shadow-black shadow-2xl "
       ></div>
-      <div className="h-dvh z-20 flex w-full items-center justify-center md:ml-[15%] md:w-[22rem]">
-        <div className="flex flex-col justify-center items-center w-80 text-xl">
-          <h2 className="flex items-center mb-4 space-x-2 text-3xl font-light text-zinc-600">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              className="p-2 text-white rounded-full size-12 bg-zinc-800"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
-            </svg>
-            <span className="text-4xl font-medium text-white">Pied Piper</span>
-          </h2>
+      <div className="h-dvh z-20 flex w-full items-center justify-center md:ml-[3%] md:w-[22rem]">
+        <div className="flex flex-col justify-center items-center w-80 text-xl min-h-[100vh]">
           <div className="flex flex-col gap-2 p-6 m-8 w-full bg-white rounded shadow-lg">
             {Object.values(providerMap).map((provider) => (
               <form
@@ -63,7 +49,7 @@ export default async function SignInPage() {
                 )}
                 <button
                   type="submit"
-                  className="flex justify-center items-center px-4 mt-2 space-x-2 w-full h-12 text-base font-light text-white rounded transition focus:ring-2 focus:ring-offset-2 focus:outline-none bg-zinc-800 hover:bg-zinc-900 focus:ring-zinc-800"
+                  className="flex justify-center items-center px-4 mt-2 space-x-2 w-full h-12 text-base font-light text-white rounded transition focus:ring-2 focus:ring-offset-2 focus:outline-none bg-pink-600 hover:bg-pink-700 focus:ring-pink-600"
                 >
                   <span>Sign in with {provider.name}</span>
                 </button>

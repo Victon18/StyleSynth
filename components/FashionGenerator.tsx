@@ -21,7 +21,6 @@ interface GeneratedDesign {
   id: string
   category: string
   style: string
-  confidence: number
   imageUrl?: string
 }
 
@@ -61,7 +60,6 @@ const FashionGenerator = () => {
         id: `design-${Date.now()}-${i}`,
         category,
         style,
-        confidence
       })
     }
 
@@ -90,14 +88,14 @@ const FashionGenerator = () => {
           {isGenerating && (
             <div className="space-y-3">
               <div className="flex items-center justify-between text-sm">
-                <span>Training GAN Model...</span>
+                <span>Getting sample from database...</span>
                 <span>{progress}%</span>
               </div>
               <Progress value={progress} className="h-2" />
               <div className="text-xs text-muted-foreground text-center">
-                {progress < 50 ? 'Training Generator Network...' :
-                 progress < 90 ? 'Training Discriminator Network...' :
-                 'Generating Fashion Designs...'}
+                {progress < 50 ? 'Connecting to database...' :
+                 progress < 90 ? 'Fetching Samples...' :
+                 'Loading Samples...'}
               </div>
             </div>
           )}
@@ -113,12 +111,12 @@ const FashionGenerator = () => {
               {isGenerating ? (
                 <>
                   <Zap className="w-4 h-4 animate-spin" />
-                  Generating...
+                  Loading...
                 </>
               ) : (
                 <>
                   <Sparkles className="w-4 h-4" />
-                  Generate New Designs
+                  Get Samples
                 </>
               )}
             </Button>
@@ -157,9 +155,6 @@ const FashionGenerator = () => {
                   <Badge variant="secondary" className="capitalize">
                     {design.category}
                   </Badge>
-                  <Badge variant="outline" className="text-accent">
-                    {design.confidence}% Match
-                  </Badge>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -177,9 +172,6 @@ const FashionGenerator = () => {
 
                 <div className="space-y-2">
                   <h3 className="font-semibold">{design.style}</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Neural network confidence: {design.confidence}%
-                  </p>
                 </div>
 
                 <Button variant="outline" size="sm" className="w-full">
@@ -190,27 +182,6 @@ const FashionGenerator = () => {
             </Card>
           ))}
         </div>
-      )}
-
-      {/* Empty State */}
-      {generatedDesigns.length === 0 && !isGenerating && (
-        <Card className="py-16">
-          <CardContent className="text-center">
-            <div className="text-6xl mb-4">🎨</div>
-            <h3 className="text-xl font-semibold mb-2">Ready to Create Fashion Magic?</h3>
-            <p className="text-muted-foreground mb-6">
-              Click the generate button to start creating unique fashion designs with AI
-            </p>
-            <Button
-              variant="default"
-              onClick={generateDesigns}
-              className="bg-fashion-gradient hover:opacity-90"
-            >
-              <Sparkles className="w-4 h-4" />
-              Start Generating
-            </Button>
-          </CardContent>
-        </Card>
       )}
     </div>
   )

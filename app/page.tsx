@@ -1,5 +1,7 @@
 import HeroSection from '@/components/HeroSection'
 import FashionGenerator from '@/components/FashionGenerator'
+import FashionDesignSection from '@/components/FashionDesignSection'
+
 import Head from 'next/head'
 
 export default function Home() {
@@ -19,6 +21,7 @@ export default function Home() {
         <main className="container mx-auto px-4 py-16" id="fashion-generator">
           <FashionGenerator />
         </main>
+        <FashionDesignSection/>
 
         {/* Footer */}
         <footer className="border-t border-border py-8">

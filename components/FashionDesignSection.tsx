@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { Button } from '@/components/ui/button'
 import Image from "next/image";
 import Imagination from "@/assets/final-result.png"
 import * as Label from "@radix-ui/react-label";
@@ -58,7 +59,7 @@ const FashionDesignSection: React.FC = () => {
   return (
     <section className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-pink-100 via-purple-100 to-white py-16 px-6">
       <div className="w-full max-w-3xl rounded-3xl shadow-lg bg-white/70 backdrop-blur-xl border border-pink-200 overflow-hidden p-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-2 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-2 bg-fashion-gradient bg-clip-text text-transparent block">
           Upload Your Fashion Sketch
         </h2>
         <p className="text-center text-gray-600 mb-8">
@@ -71,7 +72,7 @@ const FashionDesignSection: React.FC = () => {
         <div className="flex flex-col items-center gap-4">
           <Label.Root
             htmlFor="sketch-upload"
-            className="cursor-pointer bg-gradient-to-r from-pink-500 to-purple-500 text-white px-6 py-3 rounded-xl font-medium shadow-md hover:opacity-90 transition"
+            className="cursor-pointer bg-fashion-gradient text-white px-6 py-3 rounded-xl font-medium shadow-md hover:opacity-90 transition"
           >
             Upload Fashion Sketch
           </Label.Root>
@@ -96,12 +97,14 @@ const FashionDesignSection: React.FC = () => {
           )}
 
           {sketch && !isLoading && (
-            <button
+        <Button
+                variant="default"
+                size="lg"
               onClick={handleGenerateClick}
-              className="mt-6 px-6 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold hover:opacity-90 shadow-md transition"
-            >
+                className="group bg-fashion-gradient hover:opacity-90"
+              >
               Generate Design
-            </button>
+            </Button>
           )}
         </div>
 
@@ -142,13 +145,14 @@ const FashionDesignSection: React.FC = () => {
               className="w-full max-w-lg mt-4 border border-pink-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-pink-400 resize-none shadow-sm"
               rows={3}
             />
-
-            <button
+        <Button
+                variant="default"
+                size="lg"
               onClick={handleUpdateClick}
-              className="px-6 py-2 bg-gradient-to-r from-pink-500 to-purple-500 text-white rounded-xl font-semibold hover:opacity-90 transition shadow-md"
-            >
+                className="group bg-fashion-gradient hover:opacity-90"
+              >
               Update Design
-            </button>
+            </Button>
           </div>
         )}
       </div>

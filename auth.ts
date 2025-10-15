@@ -1,10 +1,11 @@
 import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google"
 import GitHub from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
 import type { Provider } from "next-auth/providers";
 
 const providers: Provider[] = [
-  GitHub,
+  GoogleProvider,
   Credentials({
     credentials: { password: { label: "Password", type: "password" } },
     async authorize(c) {
@@ -35,6 +36,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   debug: process.env.NODE_ENV !== "production" ? true : false,
   providers,
   pages: {
-    signIn: "/auth/login",
+    signIn: "/app/auth/login",
   },
 })
