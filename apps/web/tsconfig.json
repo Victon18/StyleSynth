@@ -4,8 +4,13 @@
     "plugins": [
       {
         "name": "next"
-      }
-    ]
+      },
+
+    ],
+    "paths": {
+      "$lib/*": ["./app/lib/*"]
+    }
+
   },
   "include": [
     "**/*.ts",
