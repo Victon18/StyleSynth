@@ -5,6 +5,8 @@ import "./globals.css";
 import { Providers } from "../provider";
 import { usePathname } from 'next/navigation';
 import { AppbarClient } from "../components/AppbarClient";
+import OverlayLoader from "@repo/ui/OverlayLoader";
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -27,6 +29,7 @@ export default function RootLayout({
       <body>
         {!isSignInPage && <AppbarClient />}
         {children}
+        <OverlayLoader />
       </body>
       </Providers>
     </html>

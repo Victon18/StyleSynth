@@ -5,6 +5,7 @@ import { Button } from '@repo/ui/ui/button'
 import { Badge } from '@repo/ui/ui/badge'
 import { Sparkles, Brain, Palette, Zap } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const HeroSection = () => {
   const scrollToGenerator = () => {
@@ -49,13 +50,14 @@ const HeroSection = () => {
                 className="group bg-fashion-gradient hover:opacity-90"
               >
                 <Sparkles className="w-5 h-5 group-hover:animate-pulse" />
-                Start Generating
+                View Samples
               </Button>
-
+            <Link href="/generate">
               <Button variant="outline" size="lg">
                 <Palette className="w-5 h-5" />
-                View Gallery
+                Start Generation
               </Button>
+              </Link>
             </div>
 
             {/* Features */}

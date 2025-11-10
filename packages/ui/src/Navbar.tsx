@@ -73,13 +73,13 @@ export default function Navbar({
 
             <NavigationMenu.Item>
               <Link
-                href="/editor"
+                href="/generate"
                 className={cn(
                   "transition-colors hover:text-pink-600",
                   pathname === "/generate" && "text-pink-600"
                 )}
               >
-                Editor
+                Generate
               </Link>
             </NavigationMenu.Item>
 

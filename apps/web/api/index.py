@@ -5,9 +5,11 @@ from flask import Flask, request, jsonify
 import base64
 from PIL import Image
 from werkzeug.utils import secure_filename
+from flask_cors import CORS
 
 
 app = Flask(__name__)
+CORS(app)
 
 # Paths
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))

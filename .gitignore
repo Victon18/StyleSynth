@@ -39,3 +39,7 @@ yarn-error.log*
 
 .venv39
 .io
+*.pt
+*.pth
+*_net_G.pth
+
