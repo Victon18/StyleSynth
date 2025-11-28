@@ -1,11 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 import UploadBox from "@repo/ui/UploadBox";
 import ResultFrame from "@repo/ui/ResultFrame";
 import { useOverlayLoader } from "@repo/store/overlay-loader";
+import { useHistoryStore } from "@repo/store/history";
+import GenerateDesigner from "@repo/ui/GenerateDesigner";
+import OrDivider from "@repo/ui/OrDivider";
 
 export default function GeneratePage() {
+  const { data: session } = useSession();
+
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [resultUrl, setResultUrl] = useState<string | null>(null);
@@ -19,25 +25,20 @@ export default function GeneratePage() {
     setErr(null);
     setResultUrl(null);
     setFile(f);
-    if (!f) {
-      setPreviewUrl(null);
-      return;
-    }
-    const url = URL.createObjectURL(f);
-    setPreviewUrl(url);
+    setPreviewUrl(f ? URL.createObjectURL(f) : null);
   }
 
   async function handleGenerate() {
     setErr(null);
-    if (!file) {
-      setErr("Please choose a sketch image first.");
-      return;
-    }
+
+    if (!file) return setErr("Please choose a sketch image first.");
+    if (!session?.user?.email) return setErr("You must be signed in.");
 
     setLoading(true);
     showOverlay();
 
     try {
+      // Upload image to backend model server
       const fd = new FormData();
       fd.append("image", file);
 
@@ -47,19 +48,34 @@ export default function GeneratePage() {
       });
 
       if (!res.ok) {
-        const json = await res.json().catch(() => ({}));
-        throw new Error(json?.error || `Server error ${res.status}`);
+        const j = await res.json().catch(() => ({}));
+        throw new Error(j?.error || `Server error ${res.status}`);
       }
 
       const data = await res.json();
+
       let url = data.result_base64;
       if (!url) throw new Error("Missing result_base64 in response");
-
       if (!url.startsWith("data:")) {
         url = "data:image/png;base64," + url;
       }
 
       setResultUrl(url);
+
+      // local immediate update
+      useHistoryStore.getState().add(url);
+
+      // save to DB (email is auto-detected from session)
+      await fetch("/api/history", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          url,
+          prompt: "Sketch to design",
+          modelName: "StyleGAN-CLIP",
+        }),
+      });
+
     } catch (e: any) {
       setErr(e?.message || "Unknown error");
     } finally {
@@ -74,20 +90,19 @@ export default function GeneratePage() {
         <header className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-4xl font-extrabold leading-tight text-gray-900">
-              Generate Unique <span className="text-pink-500">Fashion Designs</span>
+              Generate Unique{" "}
+              <span className="text-pink-500">Fashion Designs</span>
             </h1>
             <p className="text-sm text-gray-600 mt-1">
               Upload a sketch and our GAN will render a styled garment image.
             </p>
           </div>
-          <div>
-            <button
-              className="px-4 py-2 rounded-md bg-pink-500 text-white shadow-md hover:brightness-95"
-              onClick={() => window.scrollTo(0, document.body.scrollHeight)}
-            >
-              Start Generating
-            </button>
-          </div>
+          <button
+            className="px-4 py-2 rounded-md bg-pink-500 text-white shadow-md hover:brightness-95"
+            onClick={() => window.scrollTo(0, document.body.scrollHeight)}
+          >
+            Start Generating
+          </button>
         </header>
 
         <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
@@ -134,7 +149,9 @@ export default function GeneratePage() {
             <ResultFrame inputUrl={previewUrl} outputUrl={resultUrl} />
           </div>
         </section>
-      </div>
+        <OrDivider />
+        <GenerateDesigner />
+        </div>
     </main>
   );
 }

@@ -1,5 +1,4 @@
 import HeroSection from '@repo/ui/HeroSection'
-import FashionGenerator from '@repo/ui/FashionGenerator'
 import Head from 'next/head'
 import { getServerSession } from "next-auth";
 import { redirect } from 'next/navigation'
@@ -21,7 +20,6 @@ export default async function Home() {
         <HeroSection />
 
         <main className="container mx-auto px-4 py-16" id="fashion-generator">
-          <FashionGenerator />
         </main>
 
         {/* Footer */}

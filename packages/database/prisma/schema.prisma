@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -13,14 +7,29 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-model User {
-  id          Int      @id @default(autoincrement())
-  email       String?  @unique
-  name        String?
-  number      String  @unique
-  password    String
-}
 enum AuthType {
   Google
   Github
 }
+
+model User {
+  id       String    @id @default(cuid())
+  email    String    @unique
+  name     String?
+  number   String?   @unique
+  password String?
+
+  History  History[]
+}
+
+model History {
+  id        Int       @id @default(autoincrement())
+  url       String
+  prompt    String?
+  modelName String?
+  createdAt DateTime  @default(now())
+
+  userEmail String
+  user      User      @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+}
+

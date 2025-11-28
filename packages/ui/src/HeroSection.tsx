@@ -8,10 +8,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 const HeroSection = () => {
-  const scrollToGenerator = () => {
-    const generator = document.getElementById('fashion-generator')
-    generator?.scrollIntoView({ behavior: 'smooth' })
-  }
 
   return (
     <section className="relative overflow-hidden bg-fashion-gradient-subtle">
@@ -43,15 +39,16 @@ const HeroSection = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button
+            <Link href="/samples">
+            <Button
                 variant="default"
                 size="lg"
-                onClick={scrollToGenerator}
                 className="group bg-fashion-gradient hover:opacity-90"
               >
                 <Sparkles className="w-5 h-5 group-hover:animate-pulse" />
                 View Samples
               </Button>
+              </Link>
             <Link href="/generate">
               <Button variant="outline" size="lg">
                 <Palette className="w-5 h-5" />

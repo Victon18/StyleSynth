@@ -11,13 +11,11 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-# Paths
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 BACKEND_DIR = os.path.abspath(os.path.join(CURRENT_DIR, "..", "..", "..", "backend"))
 UPLOAD_DIR = os.path.join(CURRENT_DIR, "uploads")
 CHECKPOINT_DIR = os.path.join(BACKEND_DIR, "checkpoints", "fashion_pix2pix")
 
-# Ensure upload dir exists
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 def debug_print(*args):
@@ -34,7 +32,6 @@ def generate():
     if "image" not in request.files:
         return jsonify({"error": "image field missing"}), 400
 
-    # 1) cleanup previous uploads (handles files & directories)
     for f in os.listdir(UPLOAD_DIR):
         p = os.path.join(UPLOAD_DIR, f)
         try:
@@ -45,7 +42,6 @@ def generate():
         except Exception as e:
             debug_print("Warning cleaning old upload entry:", p, "->", e)
 
-    # 2) create proper pix2pix test folder
     test_folder = os.path.join(UPLOAD_DIR, "test")
     try:
         os.makedirs(test_folder, exist_ok=True)
@@ -57,21 +53,16 @@ def generate():
         debug_print("TEST FOLDER MISSING after os.makedirs:", test_folder)
         return jsonify({"error": "test folder not present before save", "test_folder": test_folder}), 500
 
-    # 3) Save uploaded file, convert to 256x256, convert to RGB, duplicate horizontally
     upload_file = request.files["image"]
     orig_name = secure_filename(upload_file.filename or "upload.png")
     debug_print("Original uploaded filename:", orig_name)
 
     try:
-        # open image via PIL from file stream
         img = Image.open(upload_file.stream if hasattr(upload_file, "stream") else upload_file)
-        # Convert to RGB (handles grayscale -> RGB)
         img = img.convert("RGB")
-        # Resize to 256x256 (you selected option 2)
         target_size = (256, 256)
         img = img.resize(target_size, Image.LANCZOS)
 
-        # Create concatenated AB image (width x2)
         concat_w, concat_h = target_size[0] * 2, target_size[1]
         concat = Image.new("RGB", (concat_w, concat_h))
         concat.paste(img, (0, 0))
@@ -83,7 +74,6 @@ def generate():
         debug_print("Error processing uploaded image:", str(e))
         return jsonify({"error": "failed to process uploaded image", "detail": str(e)}), 500
 
-    # verify saved
     if not os.path.isfile(save_path):
         debug_print("Saved file missing:", save_path)
         debug_print("Uploads listing:", os.listdir(UPLOAD_DIR))
@@ -92,7 +82,6 @@ def generate():
 
     debug_print("Saved concatenated AB test image at:", save_path)
 
-    # 4) Run pix2pix test.py in backend with direction AtoB
     cmd = [
         "python3",
         os.path.join(BACKEND_DIR, "test.py"),
@@ -125,7 +114,6 @@ def generate():
             "stderr_tail": proc.stderr.strip().splitlines()[-200:]
         }), 500
 
-    # 5) find generated output (support both directory patterns)
     images_candidate_1 = os.path.join(BACKEND_DIR, "results", "fashion_pix2pix", "images")
     images_candidate_2 = os.path.join(BACKEND_DIR, "results", "fashion_pix2pix", "test_latest", "images")
 
@@ -147,7 +135,6 @@ def generate():
     files = os.listdir(RESULT_DIR)
     debug_print("Result dir files:", files)
 
-    # prefer *_fake_B (common), fallback to *_fake_A or any *_fake
     fake_files = [f for f in files if f.endswith("_fake_B.png")]
     if not fake_files:
         fake_files = [f for f in files if "_fake_A" in f or "_fake" in f]
@@ -157,7 +144,6 @@ def generate():
     final_img_path = os.path.join(RESULT_DIR, fake_files[0])
     debug_print("Final generated image path:", final_img_path)
 
-    # 6) return base64
     try:
         with open(final_img_path, "rb") as fh:
             encoded = base64.b64encode(fh.read()).decode("utf-8")
